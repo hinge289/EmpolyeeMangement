@@ -1,0 +1,113 @@
+﻿@{
+    Layout = "_Common";
+}
+<div class="conatiner-fluid content-inner mt-n5 py-0">
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="row row-cols-1">
+                <div class="overflow-hidden d-slider1 ">
+
+                    <div class="swiper-button swiper-button-next"></div>
+                    <div class="swiper-button swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-lg-12">
+            <div class="row">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <div class="header-title d-flex justify-content-between align-items-center w-100">
+                                    <h4 class="card-title">Empolyee Management</h4>
+                                    <div class="ml-auto">
+                                        <a asp-controller="Admin" asp-action="AddEmpolyee" asp-route-role="Admin" class="btn btn-secondary">Add Empolyee</a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="card-body" style="color:black">
+                                <div class="table-responsive">
+
+
+                                    <table id="datatable" class="table table-striped" data-toggle="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>SR NO</th>
+                                                <th>NAME</th>
+                                                <th>MOBILE NO</th>
+                                                <th>Email</th>
+                                                <th>Designation</th>
+                                                <th>EMAIL</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model != null)
+                                            {
+                                                int i = 1;
+                                                foreach (var item in Model)
+                                                {
+                                                    <tr>
+                                                        <td>@i</td>
+                                                        <td>@item.FullName</td>
+                                                        <td>@item.MobileNo</td>
+                                                        <td>@item.DistrictName</td>
+                                                        <td>@item.SubjectName</td>
+                                                        <td>@item.Email</td>
+                                                        <td>
+                                                            <a href="#" onclick="confirmDelete('@item.UserName', '@item.Role')">
+                                                                <button class="btn btn-danger">Delete</button>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    i++;
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <a href="/Admin/Dashboard" class="btn btn-secondary">Back</a>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+            <div class="row">
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Message"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var message = "@TempData["Message"]";
+                var messageType = "@TempData["MessageType"]";
+
+                if (messageType === "success") {
+                    toastr.success(message);
+                } else if (messageType === "error") {
+                    toastr.error(message);
+                }
+            });
+        </script>
+    }
+
+    <script>
+        function confirmDelete(userName, role) {
+            if (confirm("Do you really want to delete this admin?")) {
+                window.location.href = `/SuperAdmin/DeleteAdmin?UserName=${userName}&Role=${role}`;
+            }
+        }
+    </script>

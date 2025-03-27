@@ -1,0 +1,271 @@
+
+body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+}
+
+.main-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    background: white;
+    padding: 0;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 95%;
+}
+
+
+.header-logo {
+    width: 120px;
+    padding: 10px;
+}
+
+.college-name {
+    color: #000;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 5px 0;
+    word-wrap: break-word;
+}
+
+.college-address {
+    font-size: 14px;
+    margin-bottom: 5px;
+    word-wrap: break-word;
+}
+
+.exam-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    word-wrap: break-word;
+}
+
+.student-info {
+    border: 1px solid #dee2e6;
+    margin: 15px;
+    padding: 15px;
+    overflow-x: auto;
+}
+
+.info-label {
+    font-weight: 600;
+}
+
+.marks-table {
+    margin: 15px;
+    overflow-x: auto;
+}
+
+    .marks-table th {
+        background-color: #6c757d;
+        color: white;
+        font-weight: 500;
+        text-align: center;
+        padding: 10px;
+        white-space: nowrap;
+    }
+
+    .marks-table td {
+        padding: 8px;
+        text-align: center;
+    }
+
+.total-marks {
+    background-color: #e3f2fd !important;
+    font-weight: bold;
+    text-align: center !important;
+    padding: 10px !important;
+}
+
+.result-summary {
+    background-color: #fafad2;
+    margin: 15px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.result-hosting {
+    color: #666;
+    font-size: 14px;
+}
+
+.signatures {
+    margin: 30px 15px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.signature-line {
+    flex: 1;
+    min-width: 200px;
+    text-align: center;
+}
+
+.signature-title {
+    font-size: 14px;
+}
+
+.disclaimer {
+    margin: 15px;
+    padding: 15px;
+    border-top: 1px solid #dee2e6;
+    font-size: 12px;
+    color: #666;
+}
+
+.website-link {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+    word-wrap: break-word;
+}
+
+    .website-link a {
+        color: red;
+        text-decoration: none;
+    }
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .main-container {
+        margin: 10px auto;
+    }
+
+    .college-name {
+        font-size: 20px;
+    }
+
+    .exam-title {
+        font-size: 14px;
+    }
+
+    .header-logo {
+        width: 80px;
+    }
+
+    .student-info .row {
+        margin-bottom: 15px;
+    }
+
+    .info-label {
+        margin-bottom: 5px;
+    }
+
+    .result-summary {
+        flex-direction: column;
+        text-align: center;
+    }
+
+        .result-summary > div {
+            width: 100%;
+        }
+
+    .signatures {
+        justify-content: center;
+    }
+
+    .signature-line {
+        min-width: 150px;
+    }
+
+    .website-link {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .main-container {
+        width: 98%;
+        margin: 5px auto;
+    }
+
+    .college-name {
+        font-size: 18px;
+    }
+
+    .college-address {
+        font-size: 12px;
+    }
+
+    .exam-title {
+        font-size: 13px;
+    }
+
+    .header-logo {
+        width: 60px;
+    }
+
+    .student-info {
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .marks-table {
+        margin: 10px;
+    }
+
+        .marks-table th,
+        .marks-table td {
+            padding: 5px;
+            font-size: 13px;
+        }
+
+    .signature-line {
+        min-width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .website-link {
+        font-size: 18px;
+    }
+
+    .disclaimer {
+        font-size: 11px;
+    }
+}
+
+@media print {
+    body {
+        background-color: white;
+    }
+
+    .main-container {
+        width: 100%;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .website-link {
+        display: none;
+    }
+}
+
+
+@media screen and (min-width: 1400px) {
+    .main-container {
+        max-width: 1200px;
+    }
+
+    .college-name {
+        font-size: 28px;
+    }
+
+    .exam-title {
+        font-size: 18px;
+    }
+}
+/* Professional Header */
+.pro-header {
+    color: white;
+    background: rgba(26, 35, 126, 0.9);
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

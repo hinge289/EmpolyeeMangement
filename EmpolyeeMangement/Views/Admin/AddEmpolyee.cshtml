@@ -1,0 +1,292 @@
+﻿@model Registration
+
+}
+@{
+    Layout = "~/Views/Shared/_Common.cshtml";
+}
+
+
+<form asp-controller="Admin" asp-action="AddEmpolyee" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <div class="conatiner-fluid content-inner mt-n5 py-0">
+        <div class="container-fluid content-inner mt-n5 py-0" style="color: black;">
+            <div class="row">
+                <!-- Profile Image and Upload -->
+                <div class="col-xl-3 col-lg-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header text-center  text-white">
+
+                            <h4 class="card-title mb-0">Add <span id="output1"></span>  Profile</h4>
+
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="profile-img-edit position-relative mb-3">
+                                <!-- Placeholder for Dynamic Image -->
+                                <img id="profilePic" src="./assets/images/default-avatar.png" alt="profile-pic" class="profile-pic rounded-circle avatar-100">
+
+                                <!-- File Input -->
+                                <div class="upload-icon  mt-3">
+                                    <svg class="upload-button icon-14" width="14" viewBox="0 0 24 24">
+                                        <path fill="#ffffff" d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z"></path>
+                                    </svg>
+                                    <input id="file" class="file-upload" type="file" accept=".jpg,.jpeg,.png" asp-for="File" onchange="previewImage(event) " data-fileuploaded="0" data-val="true">
+                                    <span asp-validation-for="File" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <p class="text-muted">Only <strong>.jpg, .png, .jpeg</strong> formats allowed.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Information Form -->
+                <div class="col-xl-9 col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header text-center  text-white">
+
+                            <script>
+
+                            </script>
+                            <h4 class="card-title mb-0">New <span id="output"></span> Information</h4>
+
+                        </div>
+                        <div class="card-body">
+
+                            <!-- Name Fields -->
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-4">
+                                    <label asp-for="Role" style="display:none" class="form-label">@TempData["Role"]</label> 
+
+                                    <label for="firstName" class="form-label">Empolyee Name</label>
+                                    <input type="text" maxlength="50" minlength="2" class="form-control addddd" id="firstName" placeholder="Enter Name" asp-for="Name">
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="middleName" class="form-label">Salary </label>
+                                    <input type="text" maxlength="50" minlength="2" class="form-control addddd" id="middleName" placeholder="Enter  CTC" asp-for="Salary">
+                                    <span asp-validation-for="Salary" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">          
+                                    <label for="lastName" class="form-label">Date Of Birth</label>
+                                    <input type="date" maxlength="50" minlength="2" class="form-control addddd" id="lastName" placeholder="Enter Date Of Birth" asp-for="DOB">
+                                    <span asp-validation-for="DOB" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-3">
+                                <div class="col-md-4">
+                     
+
+                                    <label for="firstName" class="form-label">Aadhar No</label>
+                                    <input type="text" maxlength="50" minlength="2" class="form-control addddd" id="firstName" placeholder="Enter Aadhar Number" asp-for="AadharNo">
+                                    <span asp-validation-for="AadharNo" class="text-danger"></span>
+                                    <div class="form-text" id="basic-addon4">As per Aadhar.</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="middleName" class="form-label">PanNo </label>
+                                    <input type="text" maxlength="50" minlength="2" class="form-control addddd" id="middleName" placeholder="Enter Pan  Number" asp-for="Pan">
+                                    <span asp-validation-for="Pan" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="lastName" class="form-label">UAN</label>
+                                    <input type="text" maxlength="50" minlength="2" class="form-control addddd" id="lastName" placeholder="Enter UAN Number" asp-for="UAN">
+                                    <span asp-validation-for="UAN" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mt-3">
+                                <div class="col-md-4">
+                                  
+
+                                    <label for="firstName" class="form-label"> Bank Account No.  </label>
+                                    <input type="text" maxlength="50" minlength="2" class="form-control addddd" id="firstName" placeholder="Enter Bank Accoun Number" asp-for="AccountNo">
+                                    <span asp-validation-for="AccountNo" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="middleName" class="form-label">
+                                        Bank Name
+                                    </label>
+                                    <input type="text" maxlength="50" minlength="2" class="form-control addddd" id="middleName" placeholder="Enter Bank Name" asp-for="BankName">
+                                    <span asp-validation-for="BankName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="lastName" class="form-label">
+                                        IFSC Code
+                                    </label>
+                                    <input type="text" maxlength="50" minlength="2" class="form-control addddd" id="lastName" placeholder="Enter IFSC Code" asp-for="IFSC">
+                                    <span asp-validation-for="IFSC" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row g-3  mt-3">
+                              
+                                <div class="col-md-6">
+                                    <label for="middleName" class="form-label">
+                                        Permanent Address
+                                    </label>
+                                    <input type="text" maxlength="50" minlength="2" class="form-control addddd" id="middleName" placeholder="Enter  Permanent Address" asp-for="PermanentAddress">
+                                    <span asp-validation-for="PermanentAddress" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="lastName" class="form-label">
+                                        Current Address
+                                    </label>
+                                    <input type="text" maxlength="50" minlength="2" class="form-control addddd" id="lastName" placeholder=" Enter Current Address" asp-for="CurrentAddress">
+                                    <span asp-validation-for="CurrentAddress" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <!-- Email and Mobile -->
+                            <div class="row g-3 mt-3">
+                                <div class="col-md-4">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter Email" asp-for="Email">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="lastName" class="form-label">HireDate</label>
+                                    <input type="date" maxlength="50" minlength="2" class="form-control addddd" id="lastName" placeholder="Enter Date Of Birth" asp-for="HireDate">
+                                    <span asp-validation-for="HireDate" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="mobile" class="form-label">Mobile No</label>
+                                    <input type="text" class="form-control" asp-for="Role" style="display:none">
+                                    <input type="text" class="form-control" id="mobile" placeholder="Enter Mobile Number" asp-for="MobileNo"
+                                           inputmode="numeric" pattern="[0-9]*" maxlength="10"
+                                           oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)">
+
+                                    <span asp-validation-for="MobileNo" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-3">
+                                <label for="designation" class="form-label">Desiganation</label>
+                                <select class="form-select" id="designation"asp-for="Designation" asp-items="@(new SelectList(ViewBag.Designation as List<Designation>, "DesignationId", "DesignationName"))">
+
+                                    <option value="0" selected>Select Designation</option>
+                                </select>
+                                <span asp-validation-for="Designation" class="text-danger"></span>
+
+                                </div>
+
+                            <!-- Role -->
+                            <div class="mt-3">
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-flex justify-content-center mt-4">
+                                <button type="submit" class="btn btn-primary me-2">Submit</button>
+                                <a href="" class="btn btn-danger" id="cancelButton">Cancel</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            function previewImage(event) {
+                var input = event.target;
+                var reader = new FileReader();
+
+                reader.onload = function () {
+                    document.getElementById('profilePic').src = reader.result;
+                };
+
+                if (input.files && input.files[0]) {
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function () {
+
+                let inputs = document.querySelectorAll("form input, form select");
+
+                inputs.forEach(input => {
+                    input.addEventListener("input", function () {
+                        let validationSpan = document.querySelector(`[data-valmsg-for='${this.name}']`);
+
+
+                        if (validationSpan && validationSpan.classList.contains("field-validation-error")) {
+                            validationSpan.classList.remove("field-validation-error");
+                            validationSpan.classList.add("field-validation-valid");
+                            validationSpan.innerText = "";
+                        }
+                    });
+                });
+            });
+        </script>
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                let role = urlParams.get("role") || localStorage.getItem("userRole");
+                        document.getElementById("output").innerText = role;
+                        document.getElementById("output1").innerText = role;
+
+                if (role) {
+                    localStorage.setItem("userRole", role);
+                }
+
+                const roleRedirects = {
+                    "Admin": "/SuperAdmin/AdminDetails?Role=Admin",
+                    "Examiner": "/Admin/ExaminerDetails?Role=Examiner",
+                    "ScanAdmin": "/SuperAdmin/ScanAdminDashboard?Role=ScanAdmin",
+                    "QC": "/ScanAdmin/QcDetails?Role=QC"
+                };
+
+                document.getElementById("cancelButton").setAttribute("href", roleRedirects[role] || "/Home/Index");
+            });
+        </script>
+
+        <script src="~/assets/js/InputVailidation.js"></script>
+        <script src="~/assets/js/ImageVailidation.js"></script>
+
+    </div>
+
+</form>
+<script>
+    $(document).ready(function() {
+        var isSubmitting = false;
+
+        $('form').on('submit', function(e) {
+            if (isSubmitting) {
+                e.preventDefault();
+                return;
+            }
+
+            var $form = $(this);
+            var $submitBtn = $form.find('button[type="submit"]');
+
+            if ($form[0].checkValidity()) {
+                isSubmitting = true;
+                $submitBtn.prop('disabled', true)
+                         .html('<span class="spinner-border spinner-border-sm"></span> Creating...');
+
+
+                setTimeout(function() {
+                    isSubmitting = false;
+                    $submitBtn.prop('disabled', false)
+                             .html('Create');
+                }, 30000);
+            }
+        });
+    });
+</script>
+@if (TempData["Message"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var message = "@TempData["Message"]";
+            var messageType = "@TempData["MessageType"]";
+
+            if (messageType === "success") {
+                toastr.success(message);
+            } else if (messageType === "error") {
+                toastr.error(message);
+            }
+        });
+    </script>
+}

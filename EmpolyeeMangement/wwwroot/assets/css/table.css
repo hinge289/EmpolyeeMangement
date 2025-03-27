@@ -1,0 +1,27 @@
+#datatable {
+    table-layout: fixed; 
+    width: 100%;
+}
+
+    #datatable th, #datatable td {
+        font-size: 13px;
+        word-wrap: break-word;
+        word-break: break-word; 
+        max-width: 200px; 
+        overflow-wrap: break-word;
+        white-space: normal; 
+    }
+
+    #datatable th {
+        background-color: #4f476c;
+        color: white;
+    }
+
+    #datatable td {
+        color: black;
+        background-color: white;
+    }
+
+.addddd {
+    text-transform: capitalize;
+}

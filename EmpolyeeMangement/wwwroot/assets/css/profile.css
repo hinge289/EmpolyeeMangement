@@ -1,0 +1,127 @@
+
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3cc196;
+    --danger-color: #ef476f;
+    --background-color: #f8f9fa;
+    --card-background: #ffffff;
+    --text-primary: #2d3436;
+    --text-secondary: #636e72;
+    --border-color: #e1e8ed;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+    --background-color: #1a1a2e;
+    --card-background: #16213e;
+    --text-primary: #ffffff;
+    --text-secondary: #b2becd;
+    --border-color: #2a2a4a;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+
+
+.profile-card {
+    background: var(--card-background);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.profile-header {
+    position: relative;
+    padding-top: 200px;
+}
+
+
+
+.profile-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.profile-avatar-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 100px; /* Move it up */
+    transform: translateX(-50%);
+}
+
+.profile-avatar {
+    width: 120px; /* Reduce size */
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid var(--card-background);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.3s ease;
+    }
+
+.status-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid var(--card-background);
+}
+
+    .status-badge.online {
+        background-color: var(--secondary-color);
+    }
+
+.profile-info {
+    padding: 40px 20px 20px;
+}
+
+    .profile-info .title {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+
+.form-section {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+    border: none;
+    background: var(--card-background);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .section-header i {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+    }
+
+label {
+    color: black;
+}
+
+.form-actions {
+    gap: 10px;
+}
+
+    .form-actions .btn {
+        padding: 8px 15px; /* Reduce button height */
+        margin: 0 5px;
+        transition: all 0.3s ease;
+    }

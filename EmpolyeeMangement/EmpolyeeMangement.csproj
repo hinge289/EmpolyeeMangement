@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\assets\vendor\fullcalendar\bootstrap\node_modules\%40fullcalendar\core\LICENSE.txt" />
+    <Content Include="wwwroot\assets\vendor\fullcalendar\bootstrap\node_modules\%40fullcalendar\core\main.css" />
+    <Content Include="wwwroot\assets\vendor\fullcalendar\bootstrap\node_modules\%40fullcalendar\core\main.min.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Empolyee\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\vendor\fullcalendar\bootstrap\node_modules\%40fullcalendar\core\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\assets\vendor\fullcalendar\bootstrap\node_modules\%40fullcalendar\core\main.d.ts" />
+  </ItemGroup>
+
+</Project>
