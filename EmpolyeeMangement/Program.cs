@@ -15,6 +15,7 @@ namespace EmpolyeeMangement
             var connection = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<DBContexts>(x => x.UseSqlServer(connection));
             builder.Services.AddTransient<IAdmin, ImpAdmin>();
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -34,7 +35,7 @@ namespace EmpolyeeMangement
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Admin}/{action=AddEmpolyee}/{id?}");
+                pattern: "{controller=Admin}/{action=Login}/{id?}");
 
             app.Run();
         }

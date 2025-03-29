@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <Folder Include="Models\Empolyee\" />
+    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
   <ItemGroup>
