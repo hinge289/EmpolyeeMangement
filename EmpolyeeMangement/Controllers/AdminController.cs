@@ -75,7 +75,7 @@ namespace EmpolyeeMangement.Controllers
             {
                 if (user.Password == model.Password)
                 {
-                    TempData["Role"] = user.Role;
+                    HttpContext.Session.SetString("Role", user.Role);
                     return user.Role=="Admin"?RedirectToAction("Dashboard", "Admin"):RedirectToAction("Dashboard","Empolyee");
                 }
                 else

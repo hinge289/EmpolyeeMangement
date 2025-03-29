@@ -15,8 +15,9 @@ namespace EmpolyeeMangement
             var connection = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<DBContexts>(x => x.UseSqlServer(connection));
             builder.Services.AddTransient<IAdmin, ImpAdmin>();
-            
+            builder.Services.AddSession(x => x.IdleTimeout = TimeSpan.FromMinutes(30));
             var app = builder.Build();
+            app.UseSession();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

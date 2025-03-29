@@ -80,9 +80,9 @@
             <div class="sidebar-list">
 
                 @*   @if(User.IsInRole("SuperAdmin")){
-                    @await Component.InvokeAsync("SuperAdminMenu", new { Role = "SuperAdmin" })
+                    @await Component.InvokeAsync("AdminMenu", new { Role = "" })
                 } *@
-                @await Component.InvokeAsync("NavMenu", new { Role = "Empolyee" })
+                @await Component.InvokeAsync("NavMenu")
                
             </div>
         </div>

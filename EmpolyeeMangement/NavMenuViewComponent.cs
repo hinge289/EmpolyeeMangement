@@ -6,7 +6,7 @@ namespace EmpolyeeMangement
     {
         public IViewComponentResult Invoke(string Role)
         {
-            ViewData["Role"] = Role;
+            ViewData["Role"] = HttpContext.Session.GetString("Role");
             return View();
         }
     }

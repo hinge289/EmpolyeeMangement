@@ -10,7 +10,7 @@ namespace EmpolyeeMangement.Controllers
         }
         public IActionResult Dashboard()
         { 
-            TempData.Keep();
+            
             return View();
         }
       
