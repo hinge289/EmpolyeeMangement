@@ -1,4 +1,5 @@
-﻿using EmpolyeeMangement.Models;
+﻿using System.Data;
+using EmpolyeeMangement.Models;
 using EmpolyeeMangement.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -60,7 +61,56 @@ namespace EmpolyeeMangement.Controllers
             _admin.AddEmpolyee(reg);
             TempData["Message"] = "Empolyee Registartion Successfull";
             TempData["MessageType"] = "success";
+            ViewBag.Designation = new SelectList(_admin.GetDesignation(), "DesignationId", "DesignationName");
+
             return View();
+        }
+        public IActionResult Import()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Import(IFormFile file)
+        {
+            if (file == null)
+            {
+                ViewBag.Message = "Please select a file";
+                return View("Import");
+            }
+            string extention = Path.GetExtension(file.FileName).ToLower();
+            DataTable dataTable = new DataTable();
+            if (extention == ".csv")
+            {
+                dataTable = _admin.ReadCsvFile(file);
+            }
+            else if (extention == ".xls" || extention == ".xlsx")
+            {
+                dataTable = _admin.ReadExcelFile(file);
+            }
+            else
+            {
+                ViewBag.Message = " Unsupported file type.";
+                return View("Import");
+            }
+            if (dataTable != null)
+            {
+                var check = _admin.UplodeScanDocument(dataTable);
+                if (check)
+                {
+                    ViewBag.Message = "File Imported Successfully.";
+                }
+                else
+                {
+                    ViewBag.Message = " Incorrect file format";
+                }
+
+            }
+            else
+            {
+                ViewBag.Message = $"Uploded File is null";
+            }
+            return View("Import");
+
         }
         public IActionResult EmpolyeeDetails()
         {
@@ -88,5 +138,33 @@ namespace EmpolyeeMangement.Controllers
             return View();
             
         }
+        public IActionResult Attendance()
+        {
+            ViewBag.EmpolyeeList= _admin.GetEmpolyeeList();
+            return View();
+        }
+          [HttpPost]
+        public IActionResult SetAttendance(List<Attendance> EmpAtt, int Month, int Year)
+        {
+            if (EmpAtt == null || !EmpAtt.Any())
+            {
+                ModelState.AddModelError("", "No attendance data received.");
+                return View();
+            }
+
+            // Example: Save the attendance records to the database
+            foreach (var attendance in EmpAtt)
+            {
+                // Set the Month and Year for each attendance record
+                attendance.Month = Month;
+                attendance.Year = Year;
+
+                // Save the attendance data to your database
+               // _admin.SaveAttendance(attendance); // This is a pseudo method. Replace it with your actual data-saving logic
+            }
+
+            return RedirectToAction("Success");
+        }
+
     }
 }

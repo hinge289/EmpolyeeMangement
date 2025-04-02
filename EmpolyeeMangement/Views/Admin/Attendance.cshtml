@@ -1,0 +1,73 @@
+﻿@{
+    Layout = "_Common";
+}
+@model List<Attendance>
+
+<div class="card-body px-0">
+    <div class="table-responsive">
+        <form asp-action="SetAttendance" method="post">
+            <!-- Month and Year Selection -->
+          
+            <div class="col-md-3">
+                <ul class="list" >
+                    <li>
+                <label for="Month" class="form-label">Month</label>
+                <select class="form-select" id="Month" name="Month" required>
+                    <option value="" selected disabled>Choose Month</option>
+                    <option value="1">Jan</option>
+                    <option value="2">Feb</option>
+                    <option value="3">Mar</option>
+                    <option value="4">Apr</option>
+                    <!-- Add more months -->
+                </select>
+                    </li>
+                 <li>
+                    <label for="Year" class="form-label">Year</label>
+                   <select class="form-select" id="Year" name="Year" required>
+                    <option value="" selected disabled>Choose Year</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <!-- Add more years -->
+                    </select>
+                    </li>
+                </ul>
+            </div>
+            
+
+            <!-- Employee Attendance Table -->
+            <table id="user-list-table" class="table table-striped" role="grid">
+                <thead>
+                    <tr class="ligth">
+                        <th>Profile</th>
+                        <th>Name</th>
+                        <th>Present Day</th>
+                        <th>Absent Day</th>
+                        <th>Over Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.EmpolyeeList as List<Empolyee>)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <img class="bg-primary-subtle rounded img-fluid avatar-40 me-3" src="../../assets/images/shapes/01.png" alt="profile">
+                            </td>
+                            <td>@item.Name</td>
+                            <td>
+                                <input class="form-control" style="width:200px" type="number" name="EmpAtt[@item.EmployeeId].PresentDays" placeholder="Present Days" />
+                            </td>
+                            <td>
+                                <input class="form-control" style="width:200px" type="number" name="EmpAtt[@item.EmployeeId].AbsentDays" placeholder="Absent Days" />
+                            </td>
+                            <td>
+                                <input class="form-control" style="width:200px" type="number" name="EmpAtt[@item.EmployeeId].OverTime" placeholder="Over Time" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <button type="submit" class="btn btn-primary">Save Attendance</button>
+        </form>
+    </div>
+</div>

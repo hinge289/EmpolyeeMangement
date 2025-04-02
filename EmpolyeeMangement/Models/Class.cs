@@ -9,4 +9,6 @@ namespace EmpolyeeMangement.Models
         public string DesignationName { get; set; }
 
     }
+
+   
 }

@@ -1,0 +1,145 @@
+﻿@model Import
+@{
+
+    Layout = "~/Views/Shared/Main.cshtml";
+}
+<div class="row">
+    <div class="col-md-4" style="margin-left: 350px;">
+        <div class="card import-card border-0 mx-auto">
+            <div class="card-header text-center py-3" style="background: linear-gradient(to right, #4e73df 0%, #224abe 100%);">
+                <h4 class="mb-0" style="color: white;">Atendance Import</h4>
+            </div>
+            <form method="post" asp-controller="GTH" asp-action="Import" enctype="multipart/form-data" id="importForm">
+                <div class="card-body">
+                    <div class="file-upload-container mb-4">
+                        <input type="file"
+                               class="file-upload-input"
+                               id="excelFile"
+                               asp-for="File"
+                               accept=".xlsx, .xls,.csv"
+                               onchange="updateFileName()">
+                        <span id="fileLabel" style="color: black">
+                            Click to select Excel or Csv file
+                        </span>
+                    </div>
+                    <span asp-validation-for="File" class="text-danger"></span>
+                    <div class="d-grid gap-3">
+                        <button type="submit" id="importBtn"
+                                class="btn btn-primary btn-lg">
+                            <span class="button-text">Import ScanDocument</span>
+                            <!-- Add a spinner inside the button -->
+                            <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-outline-info btn-lg"
+                                data-filename="ScanImport.xlsx"
+                                onclick="downloadTemplate(this)">
+                            Download Excel Format
+                        </button>
+                    </div>
+                    <!-- Enhanced loader with overlay -->
+                    <div id="loader" class="position-fixed top-0 start-0 w-100 h-100 d-none">
+                        <div class="w-100 h-100 bg-dark opacity-50"></div>
+                        <div class="position-absolute top-50 start-50 translate-middle text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="text-white mt-2">Processing Import...</div>
+                        </div>
+                    </div>
+                    @if (ViewBag.Message != null)
+                    {
+                        <div class="card-body">
+                            <div class="alert @(ViewBag.Message.StartsWith("File Imported") ? "alert-success" : "alert-danger")">
+                                @ViewBag.Message
+                            </div>
+                        </div>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const importForm = document.getElementById('importForm');
+    const importBtn = document.getElementById('importBtn');
+    const loader = document.getElementById('loader');
+    const buttonSpinner = importBtn.querySelector('.spinner-border');
+    const buttonText = importBtn.querySelector('.button-text');
+
+    // Function to show loading state
+    function showLoading() {
+        loader.classList.remove('d-none');
+        importBtn.disabled = true;
+        buttonSpinner.classList.remove('d-none');
+        buttonText.textContent = 'Importing...';
+    }
+
+    // Function to hide loading state
+    function hideLoading() {
+        loader.classList.add('d-none');
+        importBtn.disabled = false;
+        buttonSpinner.classList.add('d-none');
+        buttonText.textContent = 'Import ScanDocument';
+    }
+
+    // Show loader when form is being submitted
+    importForm.addEventListener('submit', function(e) {
+        // Validate file input
+        const fileInput = document.getElementById('excelFile');
+        if (!fileInput.files.length) {
+            e.preventDefault();
+            alert('Please select a file to import');
+            return;
+        }
+
+        // Show loading state
+        showLoading();
+    });
+
+    // Hide loader after the page has loaded
+    window.addEventListener('load', function() {
+        // Check if there is an alert message (indicates form submission is complete)
+        if (document.querySelector('.alert')) {
+            hideLoading();
+        }
+    });
+
+    // Add file validation
+    function updateFileName() {
+        const fileInput = document.getElementById('excelFile');
+        const fileLabel = document.getElementById('fileLabel');
+        const fileName = fileInput.files[0]?.name;
+
+        if (fileName) {
+            fileLabel.textContent = fileName;
+        } else {
+            fileLabel.textContent = 'Click to select Excel or Csv file';
+        }
+    }
+</script>
+
+<style>
+    #loader {
+        z-index: 9999;
+    }
+
+    .file-upload-container {
+        position: relative;
+        padding: 20px;
+        border: 2px dashed #ccc;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .file-upload-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+</style>

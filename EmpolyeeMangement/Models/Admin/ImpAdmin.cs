@@ -1,5 +1,11 @@
-﻿using System.IO;
+﻿using System.Data;
+using System.IO;
 using System.Reflection.PortableExecutable;
+using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic.FileIO;
+using System.Text;
+using ExcelDataReader;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmpolyeeMangement.Models.Admin
 {
@@ -87,7 +93,107 @@ namespace EmpolyeeMangement.Models.Admin
 
         public List<Empolyee> GetEmpolyeeList()
         {
-            return _context.Employees.ToList();
+            return _context.Employees.Where(x=>x.Role=="Empolyee").ToList();
+        }
+
+        public DataTable ReadCsvFile(IFormFile file)
+        {
+
+            DataTable dataTable = new DataTable();
+
+            using (var stream = file.OpenReadStream())
+            using (var csvReader = new TextFieldParser(stream))
+            {
+                csvReader.SetDelimiters(new[] { "," });
+                csvReader.HasFieldsEnclosedInQuotes = true;
+
+                var colFields = csvReader.ReadFields();
+                foreach (var column in colFields)
+                {
+                    dataTable.Columns.Add(column);
+                }
+
+
+                while (!csvReader.EndOfData)
+                {
+                    var fields = csvReader.ReadFields();
+                    dataTable.Rows.Add(fields);
+                }
+            }
+
+            return dataTable;
+
+        }
+
+        public DataTable ReadExcelFile(IFormFile file)
+        {
+            DataTable dataTable = new DataTable();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            using (var stream = file.OpenReadStream())
+            {
+                IExcelDataReader reader = null;
+
+                if (Path.GetExtension(file.FileName).ToLower() == ".xls")
+                {
+                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                }
+                else if (Path.GetExtension(file.FileName).ToLower() == ".xlsx")
+                {
+                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                }
+
+                var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration() { UseHeaderRow = true }
+                });
+
+                dataTable = result.Tables[0];
+                reader.Close();
+            }
+
+            return dataTable;
+        }
+
+        public bool UplodeScanDocument(DataTable dataTable)
+        {
+            var connection = _context.Database.GetDbConnection().ConnectionString;
+
+            try
+            {
+                foreach (DataRow row in dataTable.Rows)
+                {
+
+                    using (SqlConnection _sql = new SqlConnection(connection))
+                    {
+                        using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(_sql))
+                        {
+
+                            sqlBulkCopy.DestinationTableName = "dbo.EmployeeAttendance";
+                            sqlBulkCopy.ColumnMappings.Add("Month", "Month");
+                            sqlBulkCopy.ColumnMappings.Add("Year", "Year");
+                            sqlBulkCopy.ColumnMappings.Add("EmployeeId", "EmployeeId");
+                            sqlBulkCopy.ColumnMappings.Add("Days", "Days");
+                            sqlBulkCopy.ColumnMappings.Add("LOP", "LOP");
+                            sqlBulkCopy.ColumnMappings.Add("RemainingLeave", "RemainingLeave");
+
+                            _sql.Open();
+                            sqlBulkCopy.WriteToServer(dataTable);
+                            _sql.Close();
+                        }
+                        return true;
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+                throw;
+            }
+
+            return false;
+
         }
     }
 }
