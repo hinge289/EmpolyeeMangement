@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 
@@ -9,6 +10,7 @@ namespace EmpolyeeMangement.Models
         [Key]
         public int? EmployeeId { get; set; }
         [Required(ErrorMessage = "Select Designation.")]
+        [ForeignKey("Designation")]
         public int Designation { get; set; }
 
         [Required(ErrorMessage = "Please Enter  Name.")]

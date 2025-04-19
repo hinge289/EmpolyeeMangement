@@ -1,11 +1,13 @@
-﻿using System.Data;
-using System.IO;
-using System.Reflection.PortableExecutable;
-using Microsoft.Data.SqlClient;
-using Microsoft.VisualBasic.FileIO;
-using System.Text;
+﻿using AspNetCore.Reporting;
 using ExcelDataReader;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.FileIO;
+using System.Data;
+using System.Net.Mail;
+using System.Net;
+using System.Text;
+
 
 namespace EmpolyeeMangement.Models.Admin
 {
@@ -14,11 +16,13 @@ namespace EmpolyeeMangement.Models.Admin
         private readonly IWebHostEnvironment _webHostEnvironment;
         private string Connection;
         private DBContexts _context;
-        public ImpAdmin(IConfiguration configuration, DBContexts context, IWebHostEnvironment webHostEnvironment)
+        private IWebHostEnvironment _Environment;
+        public ImpAdmin(IConfiguration configuration, DBContexts context, IWebHostEnvironment webHostEnvironment, IWebHostEnvironment environment)
         {
             Connection = configuration.GetConnectionString("DefaultConnection");
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _Environment = environment;
         }
 
         public bool AddEmpolyee(Empolyee emp)
@@ -31,7 +35,7 @@ namespace EmpolyeeMangement.Models.Admin
             {
                 emp.File.CopyTo(fileStrem);
             }
-             emp.FileName = filename;
+            emp.FileName = filename;
             emp.Role = "Empolyee";
             emp.UserName = emp.Email;
             emp.Password = Genratepassword();
@@ -53,12 +57,7 @@ namespace EmpolyeeMangement.Models.Admin
 
         }
 
-        public Empolyee checkCreaditioal(Empolyee emp)
-        {
-
-            var list = _context.Employees.FirstOrDefault(x => x.UserName == emp.UserName);
-            return list == null ? null : list;
-        }
+     
 
         public bool CheckEmpolyeeExist(Empolyee emp)
         {
@@ -93,7 +92,7 @@ namespace EmpolyeeMangement.Models.Admin
 
         public List<Empolyee> GetEmpolyeeList()
         {
-            return _context.Employees.Where(x=>x.Role=="Empolyee").ToList();
+            return _context.Employees.Where(x => x.Role == "Empolyee").ToList();
         }
 
         public DataTable ReadCsvFile(IFormFile file)
@@ -169,12 +168,14 @@ namespace EmpolyeeMangement.Models.Admin
                         {
 
                             sqlBulkCopy.DestinationTableName = "dbo.EmployeeAttendance";
+
                             sqlBulkCopy.ColumnMappings.Add("Month", "Month");
                             sqlBulkCopy.ColumnMappings.Add("Year", "Year");
                             sqlBulkCopy.ColumnMappings.Add("EmployeeId", "EmployeeId");
-                            sqlBulkCopy.ColumnMappings.Add("Days", "Days");
+                            sqlBulkCopy.ColumnMappings.Add("PresentDay", "PresentDay");
                             sqlBulkCopy.ColumnMappings.Add("LOP", "LOP");
-                            sqlBulkCopy.ColumnMappings.Add("RemainingLeave", "RemainingLeave");
+
+                            sqlBulkCopy.ColumnMappings.Add("OverTime", "OverTime");
 
                             _sql.Open();
                             sqlBulkCopy.WriteToServer(dataTable);
@@ -194,6 +195,202 @@ namespace EmpolyeeMangement.Models.Admin
 
             return false;
 
+        }
+
+        private void SaveSalaryResult(List<SalaryResult> salaryResults)
+        {
+            List<SalaryRecord> salaryrecord = salaryResults.Select(sr => new SalaryRecord
+            {
+                EmployeeId = sr.EmployeeId,
+                Name=sr.Name,
+                BankName = sr.BankName,
+                AccountNo = sr.AccountNo,
+                HireDate = sr.HireDate,
+                Email = sr.Email,
+                PAN = sr.PAN,
+                MobileNo = sr.MobileNo,
+                UAN = sr.UAN,
+                Salary = sr.Salary,
+                PresentDay = sr.PresentDay,
+                OverTime = sr.OverTime,
+                LOP = sr.LOP,
+                Month = sr.Month,
+                Year = sr.Year,
+                ReamaningLeave = sr.ReamaningLeave,
+                DesignationName = sr.DesignationName,
+                MonthlySalary = sr.MonthlySalary,
+                ActualLOP = sr.ActualLOP,
+                CalculateSalary = sr.CalculateSalary,
+                BasicSalary = (int)sr.BasicSalary,
+                ActualGetSalary= (int)sr.ActualGetSalary,
+                TotalDeduction= (int)sr.TotalDeduction,
+                HRA = (int)sr.HRA,
+                STAT = (int)sr.STAT,
+                ProfessionalAllowance = (int)sr.ProfessionalAllowance,
+                CCA = (int)sr.CCA,
+                SpecialAllowance = (int)sr.SpecialAllowance,
+                Total = (int)sr.Total,
+                PF = (int)sr.PF,
+                ProfessionalTax = sr.ProfessionalTax
+            }).ToList();
+            _context.SalaryRecords.AddRange(salaryrecord);
+            _context.SaveChanges();
+        }
+
+        public List<SalaryResult> GetSalaryResults(int month, int year)
+        {
+            var spResult = _context.SalaryResults.FromSqlRaw("EXEC Sp_CalculateSalary @month={0},@year={1}", month, year).ToList();
+            SaveSalaryResult(spResult);
+            return spResult;
+        }
+
+        private DataTable GetDataIntoDT(SalaryResult record)
+        {
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("EmployeeId", typeof(int));
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("BankName", typeof(string));
+            dt.Columns.Add("AccountNo", typeof(string));
+            dt.Columns.Add("HireDate", typeof(DateTime));
+            dt.Columns.Add("Email", typeof(string));
+            dt.Columns.Add("PAN", typeof(string));
+            dt.Columns.Add("MobileNo", typeof(string));
+            dt.Columns.Add("UAN", typeof(string));
+            dt.Columns.Add("Salary", typeof(decimal));
+            dt.Columns.Add("PresentDay", typeof(int));
+            dt.Columns.Add("OverTime", typeof(int));
+            dt.Columns.Add("LOP", typeof(int));
+            dt.Columns.Add("Month", typeof(int));
+            dt.Columns.Add("Year", typeof(int));
+            dt.Columns.Add("ReamaningLeave", typeof(int));
+            dt.Columns.Add("DesignationName", typeof(string));
+            dt.Columns.Add("MonthlySalary", typeof(decimal));
+            dt.Columns.Add("ActualLOP", typeof(decimal));
+            dt.Columns.Add("CalculateSalary", typeof(decimal));
+            dt.Columns.Add("BasicSalary", typeof(int));
+            dt.Columns.Add("ActualGetSalary", typeof(int));
+            dt.Columns.Add("TotalDeduction", typeof(int));
+            dt.Columns.Add("HRA", typeof(int));
+            dt.Columns.Add("STAT", typeof(int));
+            dt.Columns.Add("ProfessionalAllowance", typeof(int));
+            dt.Columns.Add("CCA", typeof(int));
+            dt.Columns.Add("SpecialAllowance", typeof(int));
+            dt.Columns.Add("Total", typeof(int));
+            dt.Columns.Add("PF", typeof(int));
+            dt.Columns.Add("ProfessionalTax", typeof(int));
+
+            dt.Rows.Add(
+                record.EmployeeId,
+                record.Name,
+                record.BankName,
+                record.AccountNo,
+                record.HireDate,
+                record.Email,
+                record.PAN,
+                record.MobileNo,
+                record.UAN,
+                record.Salary,
+                record.PresentDay,
+                record.OverTime,
+                record.LOP,
+                record.Month,
+                record.Year,
+                record.ReamaningLeave,
+                record.DesignationName,
+                record.MonthlySalary,
+                record.ActualLOP,
+                record.CalculateSalary,
+               (int) record.BasicSalary,
+                (int)record.ActualGetSalary,
+                (int)record.TotalDeduction,
+               (int)record.HRA,
+               (int)record.STAT,
+               (int)record.ProfessionalAllowance,
+                (int)record.CCA,
+                (int)record.SpecialAllowance,
+                (int)record.Total,
+                (int)record.PF,
+                record.ProfessionalTax
+            );
+
+            return dt;
+
+        }
+        private void MailSenderr(byte[] pdfBytes, string filename,string Email)
+        {
+
+            // Sender email credentials
+            string senderEmail = "tejashinge754@gmail.com";
+            string senderPassword = "oezfvaerysltwdjg";
+
+            // Receiver email
+            string receiverEmail = Email;
+
+
+
+            // Email subject and body
+            string subject = "GTH Salary  Slip";
+            string body = $"Here Your Salary Slip";
+
+            try
+            {
+                // Create the MailMessage object
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress(senderEmail);
+                mail.To.Add(receiverEmail);
+                mail.Subject = subject;
+                mail.Body = body;
+
+                using (MemoryStream ms = new MemoryStream(pdfBytes))
+                {
+                    //pass MemoryStream , filename and type 
+                    mail.Attachments.Add(new Attachment(ms, filename, "application/pdf"));
+                    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                    smtp.Credentials = new NetworkCredential(senderEmail, senderPassword);
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                    
+                }
+                // Send the email
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+              
+            }
+
+        }
+        public bool SendSalarySlipToEmpolyee(List<SalaryResult> salaryResults)
+        {
+            
+            foreach (var item in salaryResults)
+            {
+               
+                    var dt = GetDataIntoDT(item);   
+                    string mail=null,name=null;
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        DataRow row = dt.Rows[0];
+                        mail = Convert.ToString(row["Email"]);
+                    name = Convert.ToString(row["Name"]);
+                    }
+              
+                string mimietype = "";
+                int extention = 1;
+                var path = $"{_Environment.WebRootPath}\\Reports\\SalarySlip.rdlc";
+                LocalReport rpt = new LocalReport(path);
+                rpt.AddDataSource("DataSet1", dt);
+                var result = rpt.Execute(RenderType.Pdf, extention, null, mimietype);
+                //pass report path  and filename 
+
+                 MailSenderr(result.MainStream, $"{name} SalarySlip",mail);
+            
+
+            }
+            return true;
         }
     }
 }

@@ -9,10 +9,12 @@ namespace EmpolyeeMangement.Models.Admin
         bool AddEmpolyee(Empolyee emp);
         List<Empolyee> GetEmpolyeeList();
        // List<Empolyee> GetListForAttendanceUpload();
-        Empolyee checkCreaditioal(Empolyee emp);
+     
         DataTable ReadCsvFile(IFormFile file);
         DataTable ReadExcelFile(IFormFile file);
         bool UplodeScanDocument(DataTable dt);
+        bool SendSalarySlipToEmpolyee(List<SalaryResult> salaryResults);
+        List<SalaryResult> GetSalaryResults(int month, int year);
 
 
 

@@ -1,11 +1,13 @@
-﻿using System.Data;
-using EmpolyeeMangement.Models;
+﻿using EmpolyeeMangement.Models;
 using EmpolyeeMangement.Models.Admin;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Data;
 
 namespace EmpolyeeMangement.Controllers
 {
+    [Authorize (Roles ="Admin")]
     public class AdminController : Controller
     {
         private IAdmin _admin;
@@ -17,10 +19,7 @@ namespace EmpolyeeMangement.Controllers
         {
             return View();
         }
-        public IActionResult Login()
-        {
-            return View();
-        }
+        
         public IActionResult Dashboard()
         {
             return View();
@@ -65,6 +64,7 @@ namespace EmpolyeeMangement.Controllers
 
             return View();
         }
+
         public IActionResult Import()
         {
             return View();
@@ -112,38 +112,48 @@ namespace EmpolyeeMangement.Controllers
             return View("Import");
 
         }
+        public IActionResult GenrateSalary()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult GenrateSalary(int month, int year)
+        {
+            var spResult = _admin.GetSalaryResults(month, year);
+            if (spResult != null)
+            {
+                var check = _admin.SendSalarySlipToEmpolyee(spResult);
+
+                if (check)
+                {
+                    TempData["Message"] = "Empolyee Salary Slip Send Successfully";
+                    TempData["MessageType"] = "success";
+                }
+                else
+                {
+                    TempData["Massage"] = "Something Wents Wrong";
+                    TempData["MessageType"] = "error";
+                }
+            }
+
+            TempData["Massage"] = "Upload Attendance Of thses Month";
+            TempData["MessageType"] = "error";
+
+
+            return View();
+        }
         public IActionResult EmpolyeeDetails()
         {
             ViewBag.EmpolyeeList = _admin.GetEmpolyeeList();
             return View();
         }
-        [HttpPost]
-        public IActionResult Login(Empolyee model)
-        {
-            var user = _admin.checkCreaditioal(model);
-            if (user!=null)
-            {
-                if (user.Password == model.Password)
-                {
-                    HttpContext.Session.SetString("Role", user.Role);
-                    return user.Role=="Admin"?RedirectToAction("Dashboard", "Admin"):RedirectToAction("Dashboard","Empolyee");
-                }
-                else
-                {
-                    ModelState.AddModelError("Password", "Incurrect Password");
-                    return View();
-                }
-            }
-            ModelState.AddModelError("UserName", "Incurrect Email Address");
-            return View();
-            
-        }
+        
         public IActionResult Attendance()
         {
-            ViewBag.EmpolyeeList= _admin.GetEmpolyeeList();
+            ViewBag.EmpolyeeList = _admin.GetEmpolyeeList();
             return View();
         }
-          [HttpPost]
+        [HttpPost]
         public IActionResult SetAttendance(List<Attendance> EmpAtt, int Month, int Year)
         {
             if (EmpAtt == null || !EmpAtt.Any())
@@ -160,7 +170,7 @@ namespace EmpolyeeMangement.Controllers
                 attendance.Year = Year;
 
                 // Save the attendance data to your database
-               // _admin.SaveAttendance(attendance); // This is a pseudo method. Replace it with your actual data-saving logic
+                // _admin.SaveAttendance(attendance); // This is a pseudo method. Replace it with your actual data-saving logic
             }
 
             return RedirectToAction("Success");

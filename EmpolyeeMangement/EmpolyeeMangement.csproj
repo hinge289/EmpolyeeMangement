@@ -8,30 +8,42 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\Reports\SalarySlip.rdlc" />
+    <Content Remove="wwwroot\uploads\SalarySlip.rdlc" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="wwwroot\assets\vendor\fullcalendar\bootstrap\node_modules\%40fullcalendar\core\LICENSE.txt" />
     <Content Include="wwwroot\assets\vendor\fullcalendar\bootstrap\node_modules\%40fullcalendar\core\main.css" />
     <Content Include="wwwroot\assets\vendor\fullcalendar\bootstrap\node_modules\%40fullcalendar\core\main.min.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Empolyee\" />
-    <Folder Include="wwwroot\uploads\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\assets\vendor\fullcalendar\bootstrap\node_modules\%40fullcalendar\core\README.md" />
+    <None Include="wwwroot\Reports\SalarySlip.rdlc" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
     <PackageReference Include="ExcelDataReader" Version="3.7.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\assets\vendor\fullcalendar\bootstrap\node_modules\%40fullcalendar\core\main.d.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\" />
   </ItemGroup>
 
 </Project>

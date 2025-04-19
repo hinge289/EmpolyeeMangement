@@ -1,7 +1,7 @@
 ﻿@model Import
 @{
 
-    Layout = "~/Views/Shared/Main.cshtml";
+    Layout = "_Common";
 }
 <div class="row">
     <div class="col-md-4" style="margin-left: 350px;">
@@ -9,7 +9,7 @@
             <div class="card-header text-center py-3" style="background: linear-gradient(to right, #4e73df 0%, #224abe 100%);">
                 <h4 class="mb-0" style="color: white;">Atendance Import</h4>
             </div>
-            <form method="post" asp-controller="GTH" asp-action="Import" enctype="multipart/form-data" id="importForm">
+            <form method="post" asp-controller="Admin" asp-action="Import" enctype="multipart/form-data" id="importForm">
                 <div class="card-body">
                     <div class="file-upload-container mb-4">
                         <input type="file"
